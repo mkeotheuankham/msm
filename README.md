@@ -7,6 +7,7 @@
     ├── mapService.js          # ບໍລິການຂໍ້ມູນແຜນທີ່   
     ├── endpointService.js    # ຈັດການ API endpoints 
     └── authService.js        # ການຈັດການ authentication 
+    
   /components   
     /map    
       ├── MapView.jsx          # ສ່ວນສະແດງແຜນທີ່ຫຼັກ 
