@@ -9,7 +9,7 @@ import {
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import Header from "../components/ui/Header";
-// import FeatureEditor from "../components/editor/FeatureEditor";
+import FeatureEditor from "../components/editor/FeatureEditor";
 import "./MapPage.css";
 import CursorStyle from "../components/editor/CursorStyle"; // ນຳເຂົ້າ CursorStyle
 
@@ -23,7 +23,7 @@ L.Icon.Default.mergeOptions({
 
 const MapPage = () => {
   const [markers, setMarkers] = useState([]);
-  const [setSelectedMarker] = useState(null);
+  const [selectedMarker, setSelectedMarker] = useState(null);
 
   const layers = [
     {
@@ -66,63 +66,50 @@ const MapPage = () => {
     <div className="map-page">
       <Header />
       <div className="map-container">
-        {/* Sidebar */}
-        <div className="sidebar">
-          <h3>Search Features</h3>
-          <input type="text" placeholder="Search..." className="search-box" />
-          {/* ใส่ list ของ features ถ้าต้องการ */}
-        </div>
+        <MapContainer
+          center={[17.985375, 103.968534]}
+          zoom={7}
+          style={{ height: "100%", width: "100%" }}
+          onClick={handleMapClick}
+        >
+          {/* ເພີ່ມ CursorStyle ເຂົ້າໄປໃນ MapContainer */}
+          <CursorStyle cursorType="crosshair" />
 
-        <div className="map-wrapper">
-          {/* Map Control Buttons */}
-          <div className="tool-buttons">
-            <button>Point</button>
-            <button>Line</button>
-            <button>Area</button>
-            <button>Undo</button>
-            <button>Redo</button>
-            <button style={{ backgroundColor: "#007bff", color: "#fff" }}>
-              Save
-            </button>
-          </div>
+          <LayersControl position="topright">
+            {layers.map((layer, index) => (
+              <LayersControl.BaseLayer
+                key={index}
+                name={layer.name}
+                checked={layer.checked}
+              >
+                <TileLayer
+                  url={layer.url}
+                  attribution={layer.attribution}
+                  minZoom={0}
+                  maxZoom={21}
+                  detectRetina={true}
+                />
+              </LayersControl.BaseLayer>
+            ))}
 
-          {/* MapContainer */}
-          <MapContainer
-            center={[17.985375, 103.968534]}
-            zoom={7}
-            style={{ height: "100%", width: "100%" }}
-            onClick={handleMapClick}
-          >
-            <CursorStyle cursorType="crosshair" />
-
-            <LayersControl position="topright">
-              {layers.map((layer, index) => (
-                <LayersControl.BaseLayer
-                  key={index}
-                  name={layer.name}
-                  checked={layer.checked}
-                >
-                  <TileLayer
-                    url={layer.url}
-                    attribution={layer.attribution}
-                    minZoom={0}
-                    maxZoom={21}
-                    detectRetina={true}
-                  />
-                </LayersControl.BaseLayer>
-              ))}
-
-              {markers.map((marker, index) => (
-                <Marker key={index} position={marker.position}>
-                  <Popup>
+            {markers.map((marker, index) => (
+              <Marker key={index} position={marker.position}>
+                <Popup>
+                  <div>
                     <h3>{marker.name}</h3>
                     <p>Type: {marker.type}</p>
-                  </Popup>
-                </Marker>
-              ))}
-            </LayersControl>
-          </MapContainer>
-        </div>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+          </LayersControl>
+        </MapContainer>
+        <FeatureEditor
+          selectedMarker={selectedMarker}
+          setSelectedMarker={setSelectedMarker}
+          setMarkers={setMarkers}
+          markers={markers}
+        />
       </div>
     </div>
   );

@@ -1,49 +1,78 @@
-.osm-header {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  background: #f8f8f8;
-  border-bottom: 1px solid #ddd;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.osm-title {
-  font-size: 20px;
+.header-title {
+  font-size: 1.5rem;
   font-weight: bold;
+  color: #333;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.osm-actions {
+.header-actions {
   display: flex;
   gap: 10px;
 }
 
-.osm-btn {
-  padding: 5px 10px;
-  background: none;
-  border: none;
+.header-btn {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  font-size: 0.9rem;
+  color: #333;
 }
 
-.osm-btn:hover {
-  text-decoration: underline;
+.header-btn:hover {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 
-.osm-search {
+.header-search {
   display: flex;
-  gap: 5px;
+  gap: 10px;
 }
 
-.osm-search-input {
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
+.search-input {
+  padding: 8px 16px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+  min-width: 200px;
+  transition: all 0.3s ease;
 }
 
-.osm-search-btn {
-  padding: 5px 10px;
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+
+.search-btn {
+  padding: 8px 16px;
   background: #0066cc;
   color: white;
   border: none;
-  border-radius: 3px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+  background: #0052a3;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
