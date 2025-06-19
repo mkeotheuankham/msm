@@ -3,7 +3,7 @@ import Papa from "papaparse";
 import { Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 
-const AirportMarker = React.memo(({ position, data, index, markerRefs }) => {
+const PointMarker = React.memo(({ position, data, index, markerRefs }) => {
   const markerRef = useRef();
 
   useEffect(() => {
@@ -14,41 +14,36 @@ const AirportMarker = React.memo(({ position, data, index, markerRefs }) => {
     }
   }, [markerRefs]);
 
-  const airportIcon = L.divIcon({
+  const pointIcon = L.divIcon({
     html: `
       <div style="
         background: ${index % 2 === 0 ? "#e53935" : "#1e88e5"};
-        width: 30px;
-        height: 30px;
+        width: 15px;
+        height: 15px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
         font-weight: bold;
-        border: 2px solid white;
+        font-size: 7px;
+        text-align: center;
+        line-height: 7px;
+        border: 1px solid white;
         box-shadow: 0 0 5px rgba(0,0,0,0.3);
       ">
         ${index + 1}
       </div>
     `,
     className: "",
-    iconSize: [30, 30],
-    iconAnchor: [15, 15],
+    iconSize: [10, 10],
+    iconAnchor: [7.5, 7.5],
   });
 
   return (
-    <Marker position={position} icon={airportIcon} ref={markerRef}>
+    <Marker position={position} icon={pointIcon} ref={markerRef}>
       <Popup>
-        <div style={{ minWidth: "200px" }}>
-          <h3 style={{ margin: "0 0 10px 0", color: "#1a73e8" }}>
-            {data.Name_Lao || "ບໍ່ມີຂໍ້ມູນຊື່ພາສາລາວ"}
-          </h3>
-          {data.Name && (
-            <div style={{ marginBottom: "5px" }}>
-              <strong>Name (English):</strong> {data.Name}
-            </div>
-          )}
+        <div style={{ minWidth: "50px" }}>
           <div style={{ marginBottom: "5px" }}>
             <strong>ຕຳແໜ່ງ:</strong>
             <div>Latitude: {parseFloat(data.Latitude).toFixed(4)}</div>
@@ -57,11 +52,6 @@ const AirportMarker = React.memo(({ position, data, index, markerRefs }) => {
           {data.Code && (
             <div style={{ marginBottom: "5px" }}>
               <strong>ລະຫັດ:</strong> {data.Code}
-            </div>
-          )}
-          {data.Province && (
-            <div style={{ marginBottom: "5px" }}>
-              <strong>ແຂວງ:</strong> {data.Province}
             </div>
           )}
         </div>
@@ -80,7 +70,7 @@ const CSVFileLocal = () => {
 
   const fetchCSVData = async () => {
     try {
-      const file = process.env.PUBLIC_URL + "/assets/Airport.csv";
+      const file = process.env.PUBLIC_URL + "/assets/point.csv";
       const response = await fetch(file);
       const text = await response.text();
       const result = Papa.parse(text, {
@@ -115,7 +105,7 @@ const CSVFileLocal = () => {
 
   return data
     ? data.map((item, index) => (
-        <AirportMarker
+        <PointMarker
           key={index}
           position={[item.Latitude, item.Longitude]}
           data={item}

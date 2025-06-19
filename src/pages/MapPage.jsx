@@ -12,6 +12,7 @@ import Header from "../components/ui/Header";
 // import FeatureEditor from "../components/editor/FeatureEditor";
 import "./MapPage.css";
 import CursorStyle from "../components/editor/CursorStyle"; // ນຳເຂົ້າ CursorStyle
+import CSVFileLocal from "../utils/CSVFileLocal";
 
 // Fix for default marker icons
 delete L.Icon.Default.prototype._getIconUrl;
@@ -81,6 +82,7 @@ const MapPage = () => {
             <button>Area</button>
             <button>Undo</button>
             <button>Redo</button>
+            <button>import CSV</button>
             <button style={{ backgroundColor: "#007bff", color: "#fff" }}>
               Save
             </button>
@@ -121,6 +123,7 @@ const MapPage = () => {
                 </Marker>
               ))}
             </LayersControl>
+            <CSVFileLocal />
           </MapContainer>
         </div>
       </div>
