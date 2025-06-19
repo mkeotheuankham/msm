@@ -1,0 +1,49 @@
+.osm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: #f8f8f8;
+  border-bottom: 1px solid #ddd;
+}
+
+.osm-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.osm-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.osm-btn {
+  padding: 5px 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.osm-btn:hover {
+  text-decoration: underline;
+}
+
+.osm-search {
+  display: flex;
+  gap: 5px;
+}
+
+.osm-search-input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.osm-search-btn {
+  padding: 5px 10px;
+  background: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}

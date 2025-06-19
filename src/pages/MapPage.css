@@ -1,0 +1,12 @@
+.map-container {
+  display: flex;
+  flex: 1;
+}
+
+.feature-editor-container {
+  width: 350px;
+  background: #f8f8f8;
+  border-left: 1px solid #ddd;
+  overflow-y: auto;
+  padding: 20px;
+}
