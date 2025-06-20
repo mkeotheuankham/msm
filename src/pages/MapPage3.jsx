@@ -8,6 +8,8 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+// import Header from "../components/ui/Header";
+// import FeatureEditor from "../components/editor/FeatureEditor";
 import "./MapPage.css";
 import GeomanToolbar from "../components/map/GeomanToolbar"; // ນຳເຂົ້າ GeomanToolbar
 import CursorStyle from "../components/editor/CursorStyle"; // ນຳເຂົ້າ CursorStyle
@@ -64,6 +66,7 @@ const MapPage = () => {
 
   return (
     <div className="map-page">
+      {/* <Header /> */}
       <div className="map-container">
         {/* Sidebar */}
         <div className="sidebar">
@@ -91,11 +94,6 @@ const MapPage = () => {
             center={[17.985375, 103.968534]}
             zoom={7}
             style={{ height: "100%", width: "100%" }}
-            scrollWheelZoom={true}
-            zoomControl={true}
-            doubleClickZoom={true}
-            dragging={true}
-            attributionControl={false}
             onClick={handleMapClick}
           >
             <CursorStyle cursorType="crosshair" />
