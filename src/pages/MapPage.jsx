@@ -14,6 +14,7 @@ import "./MapPage.css";
 import GeomanToolbar from "../components/map/GeomanToolbar"; // ນຳເຂົ້າ GeomanToolbar
 import CursorStyle from "../components/editor/CursorStyle"; // ນຳເຂົ້າ CursorStyle
 import CSVFileLocal from "../utils/CSVFileLocal";
+import MapWrapper from "../components/map/MapWrapper"; // ນຳເຂົ້າ MapWrapper
 
 // Fix for default marker icons
 delete L.Icon.Default.prototype._getIconUrl;
@@ -109,6 +110,8 @@ const MapPage = () => {
                 console.log("Feature clicked:", feature);
               }}
             />
+
+            <MapWrapper />
 
             <LayersControl position="topright">
               {layers.map((layer, index) => (

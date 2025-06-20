@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
 import L from "leaflet";
+import "leaflet";
+import "@geoman-io/leaflet-geoman-free";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 
 const GeomanToolbar = ({
@@ -11,6 +13,7 @@ const GeomanToolbar = ({
   const map = useMap();
 
   useEffect(() => {
+    console.log("map.pm:", map.pm);
     if (!map.pm) return; // ກວດສອບວ່າ geoman ໄດ້ຖືກເພີ່ມແລ້ວບໍ່
 
     // ເພີ່ມ Geoman controls

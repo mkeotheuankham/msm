@@ -18,8 +18,8 @@ const PointMarker = React.memo(({ position, data, index, markerRefs }) => {
     html: `
       <div style="
         background: ${index % 2 === 0 ? "#e53935" : "#1e88e5"};
-        width: 15px;
-        height: 15px;
+        width: 14px;
+        height: 14px;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -37,7 +37,7 @@ const PointMarker = React.memo(({ position, data, index, markerRefs }) => {
     `,
     className: "",
     iconSize: [10, 10],
-    iconAnchor: [7.5, 7.5],
+    iconAnchor: [8.5, 8.5],
   });
 
   return (
