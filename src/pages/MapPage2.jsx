@@ -11,7 +11,6 @@ import L from "leaflet";
 import Header from "../components/ui/Header";
 // import FeatureEditor from "../components/editor/FeatureEditor";
 import "./MapPage.css";
-import GeomanToolbar from "../components/map/GeomanToolbar"; // ນຳເຂົ້າ GeomanToolbar
 import CursorStyle from "../components/editor/CursorStyle"; // ນຳເຂົ້າ CursorStyle
 import CSVFileLocal from "../utils/CSVFileLocal";
 
@@ -97,18 +96,6 @@ const MapPage = () => {
             onClick={handleMapClick}
           >
             <CursorStyle cursorType="crosshair" />
-
-            <GeomanToolbar
-              onFeatureCreate={(feature) => {
-                console.log("Feature created:", feature);
-              }}
-              onFeatureRemove={(id) => {
-                console.log("Feature removed:", id);
-              }}
-              onFeatureClick={(feature) => {
-                console.log("Feature clicked:", feature);
-              }}
-            />
 
             <LayersControl position="topright">
               {layers.map((layer, index) => (
