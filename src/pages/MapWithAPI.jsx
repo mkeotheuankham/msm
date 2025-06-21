@@ -1,12 +1,15 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
-import { MapContainer, ZoomControl } from "react-leaflet";
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  useMemo,
+} from "react";
+import { MapContainer, TileLayer, GeoJSON, ZoomControl } from "react-leaflet";
 import L from "leaflet";
 import axios from "axios";
 import "leaflet/dist/leaflet.css";
-import DistrictSelector from "../components/ui/DistrictSelector";
-import LoadingBar from "../components/ui/LoadingBar";
-import ParcelLayer from "../components/map/ParcelLayer";
-import BasemapSelector from "../components/map/BasemapSelector";
+import LinearProgress from "@mui/material/LinearProgress";
 
 // ຕັ້ງຄ່າໄອຄອນ Marker ເລີ່ມຕົ້ນ
 delete L.Icon.Default.prototype._getIconUrl;
@@ -17,7 +20,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
 });
 
-const MapPage = () => {
+const MapWithAPI = () => {
   const [districts, setDistricts] = useState([
     {
       name: "chanthabury",
@@ -134,6 +137,27 @@ const MapPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const cancelRequest = useRef(null);
 
+  // ຮູບແບບຄວບຄຸມທີ່ໂປ່ງໃສ
+  const controlPanelStyle = useMemo(
+    () => ({
+      position: "absolute",
+      top: "20px",
+      right: "20px",
+      backgroundColor: "rgba(0, 0, 0, 0.3)",
+      padding: "15px",
+      borderRadius: "10px",
+      boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
+      zIndex: 1000,
+      maxHeight: "80vh",
+      overflowY: "auto",
+      backdropFilter: "blur(15px)",
+      border: "1px solid rgba(255,255,255,0.15)",
+      minWidth: "250px",
+      color: "#fff",
+    }),
+    []
+  );
+
   // ອັບເດດຂອບເຂດຂອງແຜນທີ່
   const updateBounds = useCallback(() => {
     const allParcels = districts
@@ -172,7 +196,7 @@ const MapPage = () => {
     [districts]
   );
 
-  // ສ້າງເນື້ອຫາ Popup
+  // ສ້າງເນື້ອຫາ Popup ແບບໂປ່ງໃສສີດຳ
   const createPopupContent = useCallback(
     (properties) => {
       const {
@@ -349,7 +373,37 @@ const MapPage = () => {
 
   return (
     <div style={{ height: "100vh", width: "100%", position: "relative" }}>
-      <LoadingBar isLoading={isLoading} loadingProgress={loadingProgress} />
+      {/* ແຖບໂຫຼດຂໍ້ມູນ */}
+      {isLoading && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 1001,
+            width: "100%",
+          }}
+        >
+          <LinearProgress
+            variant="determinate"
+            value={loadingProgress}
+            color="primary"
+            style={{ height: "3px" }}
+          />
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: "12px",
+              padding: "2px",
+              backgroundColor: "rgba(0,0,0,0.4)",
+              color: "#fff",
+            }}
+          >
+            ກຳລັງໂຫຼດຂໍ້ມູນ... {loadingProgress}%
+          </div>
+        </div>
+      )}
 
       <MapContainer
         center={bounds ? bounds.getCenter() : [17.985375, 103.968534]}
@@ -357,23 +411,93 @@ const MapPage = () => {
         style={{ height: "100%", width: "100%" }}
         bounds={bounds}
         boundsOptions={{ padding: [50, 50] }}
-        zoomControl={false}
+        zoomControl={false} // ປິດ zoom control ເດີມ
       >
-        <BasemapSelector />
-        <ZoomControl position="bottomright" />
-        <ParcelLayer
-          districts={districts}
-          getParcelStyle={getParcelStyle}
-          onEachFeature={onEachFeature}
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
+        {/* ເພີ່ມ ZoomControl ໃໝ່ທີ່ຕັ້ງຢູ່ຊ້າຍລຸ່ມ */}
+        <ZoomControl position="bottomright" />
+        {districts
+          .filter((d) => d.checked && d.parcels?.length)
+          .flatMap((d) =>
+            d.parcels.map((p) => (
+              <GeoJSON
+                key={`${d.name}-${p.gid || Math.random()}`}
+                data={{
+                  type: "Feature",
+                  geometry: p.geom,
+                  properties: { ...p, districtName: d.displayName },
+                }}
+                style={getParcelStyle(d.name)}
+                onEachFeature={onEachFeature}
+              />
+            ))
+          )}
       </MapContainer>
 
-      <DistrictSelector
-        districts={districts}
-        handleDistrictToggle={handleDistrictToggle}
-      />
+      {/* ກະດານຄວບຄຸມໂປ່ງໃສ */}
+      <div style={controlPanelStyle}>
+        <h3
+          style={{
+            margin: "0 0 15px 0",
+            color: "#fff",
+            textShadow: "0 1px 3px rgba(0,0,0,0.3)",
+          }}
+        >
+          ເລືອກເມືອງ
+        </h3>
+        {districts.map((d) => (
+          <div key={d.name} style={{ margin: "8px 0" }}>
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={d.checked}
+                onChange={() => handleDistrictToggle(d.name)}
+                disabled={d.loading}
+                style={{
+                  marginRight: "10px",
+                  width: "16px",
+                  height: "16px",
+                  cursor: "pointer",
+                  accentColor: d.color,
+                }}
+              />
+              <span
+                style={{
+                  color: d.color,
+                  fontWeight: "600",
+                  fontSize: "14px",
+                  textShadow: "0 1px 2px rgba(0,0,0,0.3)",
+                }}
+              >
+                {d.displayName}
+                {d.loading && (
+                  <span style={{ color: "#ddd", fontSize: "12px" }}>
+                    {" "}
+                    (ກຳລັງໂຫຼດ...)
+                  </span>
+                )}
+                {d.error && (
+                  <span style={{ color: "#ff9999", fontSize: "12px" }}>
+                    {" "}
+                    (ຜິດພາດ)
+                  </span>
+                )}
+              </span>
+            </label>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default MapPage;
+export default MapWithAPI;
